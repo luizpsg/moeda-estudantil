@@ -54,14 +54,115 @@ src/
    - Possibilidade de testar as requisições diretamente
    - Documentação detalhada dos modelos de dados
 
+### Configurações Sensíveis
+
+#### Configuração do JWT Secret
+
+O JWT secret é usado para assinar os tokens de autenticação. Para configurar:
+
+1. Abra o arquivo `src/main/resources/application.properties`
+2. Procure pela seção de configurações JWT
+3. Edite a linha `app.jwt.secret` com sua chave secreta:
+
+```properties
+app.jwt.secret=sua-chave-secreta-aqui
+```
+
+> **Importante:** A chave secreta deve ser uma string longa e complexa. Você pode gerar uma usando ferramentas online de geração de chaves ou comandos como `openssl rand -base64 512`.
+
+#### Configuração do SMTP (Email)
+
+Para configurar o serviço de email:
+
+1. Abra o arquivo `src/main/resources/application.properties`
+2. Procure pela seção de configurações de email
+3. Edite as seguintes linhas com suas credenciais:
+
+```properties
+spring.mail.host=seu-servidor-smtp
+spring.mail.port=sua-porta-smtp
+spring.mail.username=seu-usuario-smtp
+spring.mail.password=sua-senha-smtp
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.properties.mail.debug=true
+```
+
+> **Dica:** Para desenvolvimento, você pode usar serviços como Mailtrap.io que fornecem servidores SMTP de teste gratuitos.
+
 ## Endpoints Principais
 
-- `/api/alunos` - Gestão de alunos
-- `/api/professores` - Gestão de professores
-- `/api/empresas` - Gestão de empresas parceiras
-- `/api/vantagens` - Gestão de vantagens disponíveis
-- `/api/resgates` - Gestão de resgates de vantagens
-- `/api/notificacoes` - Gestão de notificações
+### Autenticação
+
+- `POST /api/auth/login` - Login de usuário (aluno, professor ou empresa)
+
+### Alunos
+
+- `GET /api/alunos` - Listar todos os alunos (apenas professores)
+- `GET /api/alunos/{id}` - Buscar aluno por ID
+- `POST /api/alunos/cadastro` - Cadastrar novo aluno
+- `PUT /api/alunos/{id}` - Atualizar dados do aluno
+- `DELETE /api/alunos/{id}` - Deletar aluno (apenas professores)
+- `POST /api/alunos/{id}/adicionar-moedas` - Adicionar moedas ao aluno (apenas professores)
+
+### Professores
+
+- `GET /api/professores` - Listar todos os professores
+- `GET /api/professores/{id}` - Buscar professor por ID
+- `GET /api/professores/me` - Obter dados do professor autenticado
+- `PUT /api/professores/{id}` - Atualizar dados do professor
+- `POST /api/professores/enviar-moedas` - Enviar moedas para aluno
+- `GET /api/professores/saldo` - Consultar saldo do professor
+- `GET /api/professores/extrato` - Consultar extrato do professor
+
+### Empresas Parceiras
+
+- `GET /api/empresas` - Listar todas as empresas
+- `GET /api/empresas/{id}` - Buscar empresa por ID
+- `POST /api/empresas/cadastro` - Cadastrar nova empresa
+
+### Vantagens
+
+- `GET /api/vantagens` - Listar todas as vantagens
+- `GET /api/vantagens/empresa/{empresaId}` - Listar vantagens por empresa
+- `GET /api/vantagens/{id}` - Buscar vantagem por ID
+- `POST /api/vantagens/empresa/{empresaId}` - Criar nova vantagem
+- `POST /api/vantagens/{id}/foto` - Adicionar foto à vantagem
+- `PUT /api/vantagens/{id}` - Atualizar vantagem
+- `DELETE /api/vantagens/{id}` - Deletar vantagem
+- `POST /api/vantagens/{id}/resgatar` - Resgatar vantagem (apenas alunos)
+
+### Transações
+
+- `GET /api/transacoes/extrato` - Consultar extrato do usuário autenticado
+- `GET /api/transacoes/transferencias/aluno/{alunoId}` - Listar transferências de um aluno
+- `GET /api/transacoes/cupons` - Listar cupons do usuário autenticado
+- `GET /api/transacoes/cupons/empresa/{empresaId}` - Listar cupons pendentes da empresa
+- `POST /api/transacoes/cupons/{cupomId}/validar` - Validar cupom (apenas empresas)
+
+### Notificações
+
+- `GET /api/notificacoes` - Listar todas as notificações (apenas professores)
+- `GET /api/notificacoes/minhas` - Listar notificações do usuário autenticado
+
+### Instituições e Cursos
+
+- `GET /api/instituicoes` - Listar todas as instituições
+- `GET /api/instituicoes/{id}` - Buscar instituição por ID
+- `GET /api/instituicoes/{instituicaoId}/cursos` - Listar cursos de uma instituição
+- `POST /api/instituicoes/{instituicaoId}/cursos` - Criar novo curso
+
+### Departamentos
+
+- `GET /api/departamentos` - Listar todos os departamentos
+- `GET /api/departamentos/instituicao/{instituicaoId}` - Listar departamentos por instituição
+- `GET /api/departamentos/{departamentoId}/professores` - Listar professores de um departamento
+
+### Usuários
+
+- `GET /api/usuarios` - Listar todos os usuários (apenas professores)
+- `GET /api/usuarios/{id}` - Buscar usuário por ID
+- `PUT /api/usuarios/{id}/senha` - Alterar senha do usuário
 
 ## Dados Iniciais
 
@@ -418,4 +519,6 @@ O sistema possui um serviço robusto de notificações que:
 
 ## Licença
 
-Este projeto está sob a licença [inserir licença aqui].
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE.md](LICENSE.md) para mais detalhes.
+
+A licença MIT é uma licença de software livre permissiva que permite que qualquer pessoa use, copie, modifique, mescle, publique, distribua, sublicencie e/ou venda cópias do software, desde que inclua o aviso de copyright e a permissão em todas as cópias ou partes substanciais do software.
